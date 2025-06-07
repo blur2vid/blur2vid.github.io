@@ -1,11 +1,959 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8" />
-    <title>Blur2Vid Website oming</title>
+<head> 
+
+  <meta charset="utf-8">
+  <meta name="description" content="Generating the Past, Present and Future from a Motion-Blurred Image">
+  <meta name="keywords" content="blur">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Generating the Past, Present and Future from a Motion-Blurred Image</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text y=%22.9em%22 font-size=%2290%22&gt;%E2%9C%A8&lt;/text&gt;&lt;/svg&gt;">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+
+  <script>
+  console.log("✅ JavaScript is running.");
+</script>
+
+  <style media = "all">
+    body {
+      font-family: 'Noto Sans', sans-serif;
+    }
+    .selectable:hover{
+      cursor: pointer;
+      border-radius: 1em;
+      -moz-box-shadow: 0 0 10px #ccc;
+      -webkit-box-shadow: 0 0 10px #ccc;
+      box-shadow: 0 0 10px #978e8e;
+    }
+    .project_author{
+        display:block;
+        text-align: center;
+    }
+   .author_icon{
+        box-shadow: 0 0 1em grey;
+        border-radius: 50%;
+        width:100%;
+    }
+  </style>
 </head>
 <body>
-    <h1>Website coming oon!</h1>
-    
-</body>
-</html>
+
+  <script src="js/main.js"></script>
+<script src="js/SimulatedViewer.js"></script>
+<script src="js/InTheWildViewer.js"></script>
+<script src="js/HistoricalViewer.js"></script>
+<script src="js/GoProViewer.js"></script>
+<script src="js/BaistViewer.js"></script>
+<script src="js/LimitationsViewer.js"></script>
+<script src="js/PoseViewer.js"></script>
+<script src="js/ResControl.js"></script>
+
+
+
+<section class="hero">
+    <div class="hero-body" style="padding-bottom:0;">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 style="font: 1em;" class="title is-1 publication-title text-muted" >
+              Generating the Past, Present and Future from a Motion-Blurred Image
+            </h1>
+            <!-- <div class="is-size-5 publication-authors">
+              <span class="author-block">Anonymous Author(s)</span>
+            </div>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">Submission ID: 1460</span>
+            </div>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">SIGGRAPH Asia 2025</span>
+            </div> -->
+
+            <div>
+  <span class="author-block">
+    <strong>Website was tested and built on Chrome. If you have any issues, please try another browser. </strong> 
+    <br/>
+    <strong> You can switch our website to full resolution, if your browser has sufficient memory. Otherwise we recommend viewing at half resolution. </strong> 
+
+  </span>
+</div>
+<div>
+  <span class="author-block">
+    <strong>All video files are located in the 
+    <a href="assets/" target="_blank"><strong>assets</strong></a> 
+    directory of our webpage.</strong>
+  </span>
+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br/>
+
+
+ <div id="res-toggle" class="buttons is-centered">
+          <button class="button is-info is-light" data-method="fullres" onclick="res_control.setResolution('full')">Full Resolution</button>
+          <button class="button is-info" data-method="halfres" onclick="res_control.setResolution('half')">Half Resolution</button>
+  </div>
+
+<section class="hero teaser">
+    <div class="hero-body">
+    <div style='border-radius:1em;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;padding:1em;' class="container is-max-desktop has-text-centered">
+      <br/>
+      <h2 class="title">In-the-Wild Results</h2>
+      <div class="content has-text-justified">
+        <p class="content has-text-justified">
+          We showcase our method on a variety of in-the-wild scenes. Our model can both predict in the present (1st tab) and the past and future (2nd tab). These scenes are sourced from various cameras, settings, and blur types. We find our model is able to reconstruct videos from a wide range of scenes, including those with complex motion and occlusions. Below we visualize the results of our method along with MotionETR and Jin et al. for comparison. We also show the motion tracks of the predicted frames along with dynamic 3D reconstructions recovered by MegaSAM.  
+        </p>
+      </div>
+        <div style='border-radius:1em;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;padding:1em;' class="container is-max-desktop has-text-centered">
+          <h5 style="text-align:left;">Scene Selection</h5>
+          <div id='wild-scene-selector' style="display:flex; flex-flow: row wrap; justify-content: flex-start;">
+          </div>
+        </div>
+        <br/>
+        <div id="wild-method-toggle" class="buttons is-centered">
+          <button class="button is-info" data-method="present" onclick="wild_viewer.set_method('present')">Present Predictions</button>
+          <button class="button is-info is-light" data-method="pastfuture" onclick="wild_viewer.set_method('pastfuture')">Past & Future Predictions</button>
+        </div>
+        <!-- <h3 class="subtitle">Video Reconstruction</h3> -->
+        <!-- Blurry Image centered -->
+        <div class="has-text-centered" style="margin-bottom: 1em;">
+          <img id="wild-input" style="width: 40%; border-radius: 1em; margin-bottom: 0.75em" />
+          <h5 style="font-size: 1.5em;  padding: 0.5em;"> <strong>Blurry Image  </strong></h5>
+        </div>
+  
+        <table style="width: 100%; border-collapse: collapse; text-align: center;">
+          <thead>
+            <tr>
+              <th></th> <!-- Empty corner cell -->
+              <th style="font-size: 1.5em;  padding: 0.5em;">Recovered Video</th>
+              <th style="font-size: 1.5em;  padding: 0.5em;">Motion Tracks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">Ours</th>
+              <td>
+                <video id="wild-ours" muted 
+                       style="width: 95%; border-radius: 1em;"></video>
+              </td>
+              <td>
+                <video id="wild-ours-tracks" muted
+                       style="width: 95%; border-radius: 1em;"></video>
+              </td>
+            </tr>
+            <tr class="hide-on-pastfuture">
+              <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">MotionETR</th>
+              <td>
+                <video id="wild-motionetr" muted 
+                       style="width: 95%; border-radius: 1em;;"></video>
+              </td>
+              <td>
+                <video id="wild-motionetr-tracks" muted
+                       style="width: 95%; border-radius: 1em;;"></video>
+              </td>
+            </tr>
+            <tr class="hide-on-pastfuture">
+              <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">Jin et al.</th>
+              <td>
+                <video id="wild-jin" muted 
+                       style="width: 95%; border-radius: 1em;;"></video>
+              </td>
+              <td>
+                <video id="wild-jin-tracks" muted 
+                       style="width: 95%; border-radius: 1em;;"></video>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+  
+        <div class="container is-max-desktop has-text-centered" style="padding: 1em 1.5em; border-radius: 1em; box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 10px;">
+          <div class="is-flex is-align-items-center is-justify-content-space-between" style="margin-bottom: 0.75em;">
+            <h5 style="font-size: 1.1em; margin: 0;">Frame Control</h5>
+            <button id="wild-play-pause-btn" class="button is-info" onclick="wild_viewer.toggle_play_pause()">
+              <span class="icon"><i id="wild-play-pause-icon" class="fas fa-play"></i></span>
+              <span style="font-size: 1rem; font-weight: 500;">Play</span>
+            </button>
+          </div>
+        
+          <div class="slider-container">
+            <input
+              type="range"
+              min="0"
+              max="16"
+              step="1"
+              value="0"
+              id="wild_frame_control"
+              class="frame-slider"
+              oninput="wild_viewer.change_frame(this.value);"
+            />
+            <div class="slider-ticks">
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span>
+
+            </div>
+            <div class="slider-legend">
+              <div class="legend-item" id="wild-legend-past"><span class="color-box past"></span>Past Predictions</div>
+              <div class="legend-item" id="wild-legend-present"><span class="color-box present"></span>Present (within exposure time)</div>
+              <div class="legend-item" id="wild-legend-future"><span class="color-box future"></span>Future Predictions</div>
+            </div>
+          </div> 
+        </div> <!-- container is-max-desktop -->
+  
+        <!-- Additional Comparison Table -->
+        <table style="width: 100%; border-collapse: collapse; text-align: center; margin-top: 1em;">
+          <thead>
+            <tr>
+              <th></th>
+              <th style="font-size: 1.5em;  padding: 0.5em;">3D reconstruction (from past, present, and future prediction)</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th style="font-size: 1.5em;  padding: 0.5em; text-align: center; vertical-align: middle;">MegaSAM on Ours</th>
+              <td style="width: 70%;">
+                <video id="wild-megasam"  muted autoplay loop 
+                       style="width: 95%; border-radius: 1em;"></video>
+              </td>
+              <td style="width: 30%; vertical-align: middle;">
+                <div style="font-size: 1.5em;  font-weight: bold; margin-bottom: 0.5em;">camera poses</div>
+                <video id="wild-megasam-poses"  muted autoplay loop
+                style="width: 95%; border-radius: 1em;"></video>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+  
+      </div> <!-- hero-body -->
+    </div> <!-- section container -->
+  </section>
+  
+  <br/>
+
+
+<section class="hero teaser">
+  <div class="hero-body">
+  <div style='border-radius:1em;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;padding:1em;' class="container is-max-desktop has-text-centered">
+    <br/>
+    <h2 class="title">Bringing Historical Photos to Life</h2>
+    <div class="content has-text-justified">
+      <p class="content has-text-justified">
+          We find our method can recover video from historical motion-blurred photos. Again we test our model on both predicting the present (1st tab) and the past and future (2nd tab). We also show the motion tracks of the predicted frames along with dynamic 3D reconstructions recovered by MegaSAM.  
+      </p>
+    </div>
+      <div style='border-radius:1em;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;padding:1em;' class="container is-max-desktop has-text-centered">
+        <h5 style="text-align:left;">Scene Selection</h5>
+        <div id='historical-scene-selector' style="display:flex; flex-flow: row wrap; justify-content: flex-start;">
+        </div>
+      </div>
+      <br/>
+      <div id="historical-method-toggle" class="buttons is-centered">
+        <button class="button is-info" data-method="present" onclick="historical_viewer.set_method('present')">Present Predictions</button>
+        <button class="button is-info is-light" data-method="pastfuture" onclick="historical_viewer.set_method('pastfuture')">Past & Future Predictions</button>
+      </div>
+      <!-- <h3 class="subtitle">Video Reconstruction</h3> -->
+      <!-- Blurry Image centered -->
+      <div class="has-text-centered" style="margin-bottom: 1em;">
+        <img id="historical-input"  style="width: 40%; border-radius: 1em; margin-bottom: 0.75em" />
+        <h5 style="font-size: 1.5em;  padding: 0.5em;"> <strong>Blurry Image  </strong></h5>
+      </div>
+
+      <table style="width: 100%; border-collapse: collapse; text-align: center;">
+        <thead>
+          <tr>
+            <th></th> <!-- Empty corner cell -->
+            <th style="font-size: 1.5em;  padding: 0.5em;">Recovered Video</th>
+            <th style="font-size: 1.5em;  padding: 0.5em;">Motion Tracks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">Ours</th>
+            <td>
+              <video id="historical-ours"  muted 
+                     style="width: 95%; border-radius: 1em;"></video>
+            </td>
+            <td>
+              <video id="historical-ours-tracks"  muted
+                     style="width: 95%; border-radius: 1em;"></video>
+            </td>
+          </tr>
+          <!-- <tr class="hide-on-pastfuture">
+            <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">MotionETR</th>
+            <td>
+              <video id="historical-motionetr"  muted 
+                     style="width: 95%; border-radius: 1em;;"></video>
+            </td>
+            <td>
+              <video id="historical-motionetr-tracks"  muted
+                     style="width: 95%; border-radius: 1em;;"></video>
+            </td>
+          </tr>
+          <tr class="hide-on-pastfuture">
+            <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">Jin et al.</th>
+            <td>
+              <video id="historical-jin"  muted 
+                     style="width: 95%; border-radius: 1em;;"></video>
+            </td>
+            <td>
+              <video id="historical-jin-tracks"  muted 
+                     style="width: 95%; border-radius: 1em;;"></video>
+            </td>
+          </tr> -->
+        </tbody>
+      </table>
+      
+
+      <div class="container is-max-desktop has-text-centered" style="padding: 1em 1.5em; border-radius: 1em; box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 10px;">
+        <div class="is-flex is-align-items-center is-justify-content-space-between" style="margin-bottom: 0.75em;">
+          <h5 style="font-size: 1.1em; margin: 0;">Frame Control</h5>
+          <button id="historical-play-pause-btn" class="button is-info" onclick="historical_viewer.toggle_play_pause()">
+            <span class="icon"><i id="historical-play-pause-icon" class="fas fa-play"></i></span>
+            <span style="font-size: 1rem; font-weight: 500;">Play</span>
+          </button>
+        </div>
+      
+        <div class="slider-container">
+          <input
+            type="range"
+            min="0"
+            max="16"
+            step="1"
+            value="0"
+            id="historical_frame_control"
+            class="frame-slider"
+            oninput="historical_viewer.change_frame(this.value);"
+          />
+          <div class="slider-ticks">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+            <span></span>
+
+          </div>
+          <div class="slider-legend">
+            <div class="legend-item" id="historical-legend-past"><span class="color-box past"></span>Past Predictions</div>
+            <div class="legend-item" id="historical-legend-present"><span class="color-box present"></span>Present (within exposure time)</div>
+            <div class="legend-item" id="historical-legend-future"><span class="color-box future"></span>Future Predictions</div>
+          </div>
+        </div> 
+      </div> <!-- container is-max-desktop -->
+
+      <!-- Additional Comparison Table -->
+      <table style="width: 100%; border-collapse: collapse; text-align: center; margin-top: 1em;">
+        <thead>
+          <tr>
+            <th></th>
+            <th style="font-size: 1.5em;  padding: 0.5em;">3D reconstruction (from past, present, and future prediction)</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th style="font-size: 1.5em;  padding: 0.5em; text-align: center; vertical-align: middle;">MegaSAM on Ours</th>
+            <td style="width: 70%;">
+              <video id="historical-megasam"  muted autoplay loop 
+                     style="width: 95%; border-radius: 1em;"></video>
+            </td>
+            <td style="width: 30%; vertical-align: middle;">
+              <div style="font-size: 1.5em;  font-weight: bold; margin-bottom: 0.5em;">camera poses</div>
+              <video id="historical-megasam-poses" muted autoplay loop
+              style="width: 95%; border-radius: 1em;"></video>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div> <!-- hero-body -->
+  </div> <!-- section container -->
+</section>
+
+<br/>
+<section class="hero teaser">
+  <div class="hero-body">
+        <div style='border-radius:1em;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;padding:1em;' class="container is-max-desktop has-text-centered">
+
+    <div class="container is-max-desktop has-text-centered" style="border-radius:1em; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; padding:1em;">
+      <h2 class="title">Recovering 3D Human Pose</h2>
+        <div class="content has-text-justified">
+      <p class="content has-text-justified">
+          We find our method can recover pose from a blurry image with human motion. From this blurred image, we are able to recover a video sequence of a man shaking his head. We visualize the recovered video sequence as well as the human head pose.
+      </p>
+    </div>
+       <div class="has-text-centered" style="margin-bottom: 1em;">
+          <img id="pose-input" src="assets/pose/BlurryFace1.png" style="width: 40%; border-radius: 1em; margin-bottom: 0.75em" />
+          <h5 style="font-size: 1.5em;  padding: 0.5em;"> <strong>Blurry Image  </strong></h5>
+        </div>
+       <table style="width: 100%; border-collapse: collapse; text-align: center; margin-top: 1em;">
+  <tbody>
+    <!-- Reconstructed Video Title -->
+    <tr>
+      <th colspan="1" style="font-size: 1.5em; padding: 0.5em; text-align: center;">Reconstructed Video</th>
+    </tr>
+    <!-- Reconstructed Video -->
+    <tr>
+      <td style="width: 30%;">
+        <video id="pose-reconstructed-video" src="assets/pose/BlurryFace1_2x_Ours.mp4" muted autoplay loop 
+               style="width: 50%; border-radius: 1em;"></video>
+      </td>
+    </tr>
+    <!-- Pose Estimation Title -->
+    <tr>
+      <th colspan="1" style="font-size: 1.5em; padding: 0.5em; text-align: center;">Pose Estimation</th>
+    </tr>
+    <!-- Pose Estimation Video -->
+    <tr>
+      <td style="width: 70%;">
+        <video id="pose-reconstructed-video-2" src="assets/pose/blurr_face_tracking_crop.mp4" muted autoplay loop playsinline
+               style="width: 95%; border-radius: 1em;"></video>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+    </div>
+    </div>
+  </div>
+</section>
+
+  <!-- SIMULATED RESULTS-->
+  <section class="hero teaser">
+    <div class="hero-body">
+    <div style='border-radius:1em;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;padding:1em;' class="container is-max-desktop has-text-centered">
+      <br/>
+      <h2 class="title">Simulated Results</h2>
+      <div class="content has-text-justified">
+        <p class="content has-text-justified">
+          We test our model on the simulated dataset we generated in our paper. We are able to recover a robust range of motions while predicting the past, present, and future. We show motion tracks to visualize the predicted motions. 
+        </p>
+      </div>
+        <div style='border-radius:1em;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;padding:1em;' class="container is-max-desktop has-text-centered">
+          <h5 style="text-align:left;">Scene Selection</h5>
+          <div id='simulated-scene-selector' style="display:flex; flex-flow: row wrap; justify-content: space-evenly;">
+          </div>
+        </div>
+        <br/>
+        <div id="simulated-method-toggle" class="buttons is-centered">
+          <button class="button is-info" data-method="present" onclick="simulated_viewer.set_method('present')">Present Predictions</button>
+          <button class="button is-info is-light" data-method="pastfuture" onclick="simulated_viewer.set_method('pastfuture')">Past & Future Predictions</button>
+        </div>
+        <h3 class="subtitle">Video Reconstruction</h3>
+        <div class="row" style="display: flex; flex-wrap: wrap; justify-content: space-evenly; align-items: center;">
+          <!-- Blurry input image
+          <div style="flex: 0 0 30%; max-width: 30%;">
+            <img id="simulated-input" src="assets/simulated/blurry/0000_present.png" style="width: 100%; border-radius: 1em; margin-bottom: 1em;" />
+            <h5 class="subtitle" style="font-size: 1.5em; ">Blurry Image</h5>
+          </div>
+        
+          <div style="flex: 0 0 60%; max-width: 60%;">
+            <img id="simulated-output" src="assets/simulated/frames/0000/present/0000.png" style="width: 100%; border-radius: 1em; margin-bottom: 1em;" />
+            <h5 class="subtitle" style="font-size: 1.5em; ">Recovered Video</h5>
+          </div>
+        </div> -->
+        <div class="has-text-centered" style="margin-bottom: 1em;">
+          <img id="simulated-input" style="width: 40%; border-radius: 1em; margin-bottom: 0.75em" />
+          <h5 style="font-size: 1.5em;  padding: 0.5em;"> <strong>Blurry Image  </strong></h5>
+        </div>
+  
+        <table style="width: 100%; border-collapse: collapse; text-align: center;">
+          <thead>
+            <tr>
+              <th></th> <!-- Empty corner cell -->
+              <th style="font-size: 1.5em;  padding: 0.5em;">Recovered Video</th>
+              <th style="font-size: 1.5em;  padding: 0.5em;">Motion Tracks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">Ours</th>
+              <td>
+                <video id="simulated-ours"
+                       style="width: 95%; border-radius: 1em;"></video>
+              </td>
+              <td>
+                <video id="simulated-ours-tracks" 
+                       style="width: 95%; border-radius: 1em;"></video>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+          
+        <div class="container is-max-desktop has-text-centered" style="padding: 1em 1.5em; border-radius: 1em; box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 10px;">
+          <div class="is-flex is-align-items-center is-justify-content-space-between" style="margin-bottom: 0.75em;">
+            <h5 style="font-size: 1.1em; margin: 0;">Frame Control</h5>
+            <button id="simulated-play-pause-btn" class="button is-info" onclick="simulated_viewer.toggle_play_pause()">
+              <span class="icon"><i id="simulated-play-pause-icon" class="fas fa-play"></i></span>
+              <span style="font-size: 1rem; font-weight: 500;">Play</span>
+            </button>
+          </div>
+        
+          <div class="slider-container">
+            <input
+              type="range"
+              min="0"
+              max="16"
+              step="1"
+              value="0"
+              id="simulated_frame_control"
+              class="frame-slider"
+              oninput="simulated_viewer.change_frame(this.value);"
+            />
+            <div class="slider-ticks">
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span>
+            </div>
+            <div class="slider-legend">
+              <div class="legend-item" id="simulated-legend-past"><span class="color-box past"></span>Past Predictions</div>
+              <div class="legend-item" id="simulated-legend-present"><span class="color-box present"></span>Present (within exposure time)</div>
+              <div class="legend-item" id="simulated-legend-future"><span class="color-box future"></span>Future Predictions</div>
+            </div>
+          </div> 
+        </div> <!-- container is-max-desktop -->
+      </div> <!-- hero-body -->
+    </div> <!-- section container -->
+  </section>
+  
+
+
+<section class="hero teaser">
+  <div class="hero-body">
+  <div style='border-radius:1em;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;padding:1em;' class="container is-max-desktop has-text-centered">
+    <br/>
+    <h2 class="title">GoPro Results</h2>
+    <div class="content has-text-justified">
+      <p class="content has-text-justified">
+          We test our model on the GoPro dataset and compare against Motion ETR and Jin et al. Our method is able to recover the videos more faithfully and predicts more realistic Motion Tracks. MotionETR warps the scene content in many cases and Jin et al. fails to recover many subtle motions and also produces many artifacts. In cases of blur caused by global motion, our Motion Tracks are very smooth, while baselines latch onto local features and produce jittery tracks. 
+      </p>
+    </div>
+      <div style='border-radius:1em;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;padding:1em;' class="container is-max-desktop has-text-centered">
+        <h5 style="text-align:left;">Scene Selection</h5>
+        <div id='gopro-scene-selector' style="display:flex; flex-flow: row wrap; justify-content: flex-start;">
+        </div>
+      </div>
+      <br/>
+      <br/>
+      <!-- <h3 class="subtitle">Video Reconstruction</h3> -->
+      <!-- Blurry Image centered -->
+      <div class="has-text-centered" style="margin-bottom: 1em;">
+        <img id="gopro-input" src="assets/gopro/blurry/0000_present.png" style="width: 40%; border-radius: 1em; margin-bottom: 0.75em" />
+        <h5 style="font-size: 1.5em;  padding: 0.5em;"> <strong>Blurry Image  </strong></h5>
+      </div>
+
+      <table style="width: 100%; border-collapse: collapse; text-align: center;">
+        <thead>
+          <tr>
+            <th></th> <!-- Empty corner cell -->
+            <th style="font-size: 1.5em;  padding: 0.5em;">Recovered Video</th>
+            <th style="font-size: 1.5em;  padding: 0.5em;">Motion Tracks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">Ours</th>
+            <td>
+              <video id="gopro-ours" src="assets/gopro/videos/0000/present/Ours.mp4" muted 
+                     style="width: 95%; border-radius: 1em;"></video>
+            </td>
+            <td>
+              <video id="gopro-ours-tracks" src="assets/gopro/tracks/0000/present/Ours.mp4" muted
+                     style="width: 95%; border-radius: 1em;"></video>
+            </td>
+          </tr>
+          <tr class="hide-on-pastfuture">
+            <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">MotionETR</th>
+            <td>
+              <video id="gopro-motionetr" src="assets/gopro/videos/0000/present/MotionETR.mp4" muted 
+                     style="width: 95%; border-radius: 1em;;"></video>
+            </td>
+            <td>
+              <video id="gopro-motionetr-tracks" src="assets/gopro/tracks/0000/present/MotionETR.mp4" muted
+                     style="width: 95%; border-radius: 1em;;"></video>
+            </td>
+          </tr>
+          <tr class="hide-on-pastfuture">
+            <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">Jin et al.</th>
+            <td>
+              <video id="gopro-jin" src="assets/gopro/videos/0000/present/Jin.mp4" muted 
+                     style="width: 95%; border-radius: 1em;;"></video>
+            </td>
+            <td>
+              <video id="gopro-jin-tracks" src="assets/gopro/tracks/0000/present/Jin.mp4" muted 
+                     style="width: 95%; border-radius: 1em;;"></video>
+            </td>
+          </tr>
+          <tr class="hide-on-pastfuture">
+            <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">Ground Truth</th>
+            <td>
+              <video id="gopro-gt" src="assets/gopro/videos/0000/present/GT.mp4" muted 
+                     style="width: 95%; border-radius: 1em;;"></video>
+            </td>
+            <td>
+              <video id="gopro-gt-tracks" src="assets/gopro/tracks/0000/present/GT.mp4" muted 
+                     style="width: 95%; border-radius: 1em;;"></video>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+
+      <div class="container is-max-desktop has-text-centered" style="padding: 1em 1.5em; border-radius: 1em; box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 10px;">
+        <div class="is-flex is-align-items-center is-justify-content-space-between" style="margin-bottom: 0.75em;">
+          <h5 style="font-size: 1.1em; margin: 0;">Frame Control</h5>
+          <button id="gopro-play-pause-btn" class="button is-info" onclick="gopro_viewer.toggle_play_pause()">
+            <span class="icon"><i id="gopro-play-pause-icon" class="fas fa-play"></i></span>
+            <span style="font-size: 1rem; font-weight: 500;">Play</span>
+          </button>
+        </div>
+      
+        <div class="slider-container">
+          <input
+            type="range"
+            min="0"
+            max="7"
+            step="1"
+            value="0"
+            id="gopro_frame_control"
+            class="frame-slider"
+            oninput="gopro_viewer.change_frame(this.value);"
+          />
+          <div class="slider-ticks">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+            <span></span>
+
+          </div>
+          <div class="slider-legend">
+            <div class="legend-item" id="gopro-legend-past"><span class="color-box past"></span>Past Predictions</div>
+            <div class="legend-item" id="gopro-legend-present"><span class="color-box present"></span>Present (within exposure time)</div>
+            <div class="legend-item" id="gopro-legend-future"><span class="color-box future"></span>Future Predictions</div>
+          </div>
+        </div> 
+      </div> <!-- container is-max-desktop -->
+
+      <!-- Additional Comparison Table -->
+      <!-- <table style="width: 100%; border-collapse: collapse; text-align: center; margin-top: 1em;">
+        <thead>
+          <tr>
+            <th></th>
+            <th style="font-size: 1.5em;  padding: 0.5em;">3D reconstruction</th>
+            <th></th>
+          </tr>
+        </thead> -->
+        <!-- <tbody>
+          <tr>
+            <th style="font-size: 1.5em;  padding: 0.5em; text-align: center; vertical-align: middle;">MegaSAM on Ours</th>
+            <td style="width: 70%;">
+              <video id="gopro-megasam" src="assets/gopro/videos/cam_motion.mp4" muted autoplay loop 
+                     style="width: 95%; border-radius: 1em;"></video>
+            </td>
+            <td style="width: 30%; vertical-align: middle;">
+              <div style="font-size: 1.5em;  font-weight: bold; margin-bottom: 0.5em;">camera poses</div>
+              <video id="gopro-megasam-poses" src="assets/gopro/videos/poses.mp4" muted autoplay loop
+              style="width: 95%; border-radius: 1em;"></video>
+            </td>
+          </tr>
+        </tbody> -->
+      </table>
+
+    </div> <!-- hero-body -->
+  </div> <!-- section container -->
+</section>
+
+<br/>
+
+
+<section class="hero teaser">
+  <div class="hero-body">
+  <div style='border-radius:1em;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;padding:1em;' class="container is-max-desktop has-text-centered">
+    <br/>
+    <h2 class="title">B-AIST++ Results</h2>
+    <div class="content has-text-justified">
+      <p class="content has-text-justified">
+       We compare our method on the B-AIST++ dataset. We find our model is able to recover the dancer poses and motions more faithfully than Animation From Blur. Our model is able to handle the various occlusion and disocclusion changes that happen while the dancer is moving.
+      </p>
+    </div>
+      <div style='border-radius:1em;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;padding:1em;' class="container is-max-desktop has-text-centered">
+        <h5 style="text-align:left;">Scene Selection</h5>
+        <div id='baist-scene-selector' style="display:flex; flex-flow: row wrap; justify-content: flex-start;">
+        </div>
+      </div>
+      <br/>
+      <br/>
+      <!-- <h3 class="subtitle">Video Reconstruction</h3> -->
+      <!-- Blurry Image centered -->
+      <div class="has-text-centered" style="margin-bottom: 1em;">
+        <img id="baist-input" src="assets/baist/blurry/0000_present.png" style="width: 20%; border-radius: 1em; margin-bottom: 0.75em" />
+          <h5 style="font-size: 1.5em;  padding: 0.5em;"> <strong>Blurry Image  </strong></h5>
+      </div>
+
+      <table style="width: 100%; border-collapse: collapse; text-align: center;">
+        <thead>
+          <tr>
+            <th></th> <!-- Empty corner cell -->
+            <th style="font-size: 1.5em;  padding: 0.5em;">Recovered Video</th>
+            <th style="font-size: 1.5em;  padding: 0.5em;">Motion Tracks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">Ours</th>
+            <td>
+              <video id="baist-ours" src="assets/baist/videos/0000/present/Ours.mp4" muted 
+                     style="width: 50%; border-radius: 1em;"></video>
+            </td>
+            <td>
+              <video id="baist-ours-tracks" src="assets/baist/tracks/0000/present/Ours.mp4" muted
+                     style="width: 50%; border-radius: 1em;"></video>
+            </td>
+          </tr>
+          <tr class="hide-on-pastfuture">
+            <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">Animation from Blur</th>
+            <td>
+              <video id="baist-anim" src="assets/baist/videos/0000/present/anim.mp4" muted 
+                     style="width: 50%; border-radius: 1em;;"></video>
+            </td>
+            <td>
+              <video id="baist-anim-tracks" src="assets/baist/tracks/0000/present/anim.mp4" muted
+                     style="width: 50%; border-radius: 1em;;"></video>
+            </td>
+          </tr>
+           <tr class="hide-on-pastfuture">
+            <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">Ground Truth</th>
+            <td>
+              <video id="baist-gt" src="assets/baist/videos/0000/present/GT.mp4" muted 
+                     style="width: 50%; border-radius: 1em;;"></video>
+            </td>
+            <td>
+              <video id="baist-gt-tracks" src="assets/baist/tracks/0000/present/GT.mp4" muted
+                     style="width: 50%; border-radius: 1em;;"></video>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+
+      <div class="container is-max-desktop has-text-centered" style="padding: 1em 1.5em; border-radius: 1em; box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 10px;">
+        <div class="is-flex is-align-items-center is-justify-content-space-between" style="margin-bottom: 0.75em;">
+          <h5 style="font-size: 1.1em; margin: 0;">Frame Control</h5>
+          <button id="baist-play-pause-btn" class="button is-info" onclick="baist_viewer.toggle_play_pause()">
+            <span class="icon"><i id="baist-play-pause-icon" class="fas fa-play"></i></span>
+            <span style="font-size: 1rem; font-weight: 500;">Play</span>
+          </button>
+        </div>
+      
+        <div class="slider-container">
+          <input
+            type="range"
+            min="0"
+            max="7"
+            step="1"
+            value="0"
+            id="baist_frame_control"
+            class="frame-slider"
+            oninput="baist_viewer.change_frame(this.value);"
+          />
+          <div class="slider-ticks">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+            <span></span>
+
+          </div>
+          <div class="slider-legend">
+            <div class="legend-item" id="baist-legend-past"><span class="color-box past"></span>Past Predictions</div>
+            <div class="legend-item" id="baist-legend-present"><span class="color-box present"></span>Present (within exposure time)</div>
+            <div class="legend-item" id="baist-legend-future"><span class="color-box future"></span>Future Predictions</div>
+          </div>
+        </div> 
+      </div> <!-- container is-max-desktop -->
+
+      <!-- Additional Comparison Table -->
+      <!-- <table style="width: 100%; border-collapse: collapse; text-align: center; margin-top: 1em;">
+        <thead>
+          <tr>
+            <th></th>
+            <th style="font-size: 1.5em;  padding: 0.5em;">3D reconstruction</th>
+            <th></th>
+          </tr>
+        </thead> -->
+        <!-- <tbody>
+          <tr>
+            <th style="font-size: 1.5em;  padding: 0.5em; text-align: center; vertical-align: middle;">MegaSAM on Ours</th>
+            <td style="width: 70%;">
+              <video id="baist-megasam" src="assets/baist/videos/cam_motion.mp4" muted autoplay loop 
+                     style="width: 95%; border-radius: 1em;"></video>
+            </td>
+            <td style="width: 30%; vertical-align: middle;">
+              <div style="font-size: 1.5em;  font-weight: bold; margin-bottom: 0.5em;">camera poses</div>
+              <video id="baist-megasam-poses" src="assets/baist/videos/poses.mp4" muted autoplay loop
+              style="width: 95%; border-radius: 1em;"></video>
+            </td>
+          </tr>
+        </tbody> -->
+      </table>
+
+    </div> <!-- hero-body -->
+  </div> <!-- section container -->
+</section>
+
+<br/>
+
+
+<section class="hero teaser">
+    <div class="hero-body">
+    <div style='border-radius:1em;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;padding:1em;' class="container is-max-desktop has-text-centered">
+      <br/>
+      <h2 class="title">Limitations</h2>
+      <div class="content has-text-justified">
+        <p class="content has-text-justified">
+         Our model is limited in scenarios with artful motion blur where photos are synthesized for images captured at different time instances. Additionally, our model fails in scenarios with complex camera and scene motion.
+        </p>
+      </div>
+        <div style='border-radius:1em;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;padding:1em;' class="container is-max-desktop has-text-centered">
+          <h5 style="text-align:left;">Scene Selection</h5>
+          <div id='limitations-scene-selector' style="display:flex; flex-flow: row wrap; justify-content: flex-start;">
+          </div>
+        </div>
+        <br/>
+        <div id="limitations-method-toggle" class="buttons is-centered">
+          <button class="button is-info" data-method="present" onclick="limitations_viewer.set_method('present')">Present Predictions</button>
+          <button class="button is-info is-light" data-method="pastfuture" onclick="limitations_viewer.set_method('pastfuture')">Past & Future Predictions</button>
+        </div>
+        <!-- <h3 class="subtitle">Video Reconstruction</h3> -->
+        <!-- Blurry Image centered -->
+        <div class="has-text-centered" style="margin-bottom: 1em;">
+          <img id="limitations-input"  style="width: 40%; border-radius: 1em; margin-bottom: 0.75em" />
+          <h5 style="font-size: 1.5em;  padding: 0.5em;"> <strong>Blurry Image  </strong></h5>
+        </div>
+  
+        <table style="width: 100%; border-collapse: collapse; text-align: center;">
+          <thead>
+            <tr>
+              <th></th> <!-- Empty corner cell -->
+              <th style="font-size: 1.5em;  padding: 0.5em;">Recovered Video</th>
+              <th style="font-size: 1.5em;  padding: 0.5em;">Motion Tracks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">Ours</th>
+              <td>
+                <video id="limitations-ours"  muted 
+                       style="width: 95%; border-radius: 1em;"></video>
+              </td>
+              <td>
+                <video id="limitations-ours-tracks"  muted
+                       style="width: 95%; border-radius: 1em;"></video>
+              </td>
+            </tr>
+            <tr class="hide-on-pastfuture">
+              <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">MotionETR</th>
+              <td>
+                <video id="limitations-motionetr"  muted 
+                       style="width: 95%; border-radius: 1em;;"></video>
+              </td>
+              <td>
+                <video id="limitations-motionetr-tracks"  muted
+                       style="width: 95%; border-radius: 1em;;"></video>
+              </td>
+            </tr>
+            <tr class="hide-on-pastfuture">
+              <th style="font-size: 1.5em; padding: 0.5em; text-align: center; vertical-align: middle;">Jin et al.</th>
+              <td>
+                <video id="limitations-jin"  muted 
+                       style="width: 95%; border-radius: 1em;;"></video>
+              </td>
+              <td>
+                <video id="limitations-jin-tracks"  muted 
+                       style="width: 95%; border-radius: 1em;;"></video>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+  
+        <div class="container is-max-desktop has-text-centered" style="padding: 1em 1.5em; border-radius: 1em; box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 10px;">
+          <div class="is-flex is-align-items-center is-justify-content-space-between" style="margin-bottom: 0.75em;">
+            <h5 style="font-size: 1.1em; margin: 0;">Frame Control</h5>
+            <button id="limitations-play-pause-btn" class="button is-info" onclick="limitations_viewer.toggle_play_pause()">
+              <span class="icon"><i id="limitations-play-pause-icon" class="fas fa-play"></i></span>
+              <span style="font-size: 1rem; font-weight: 500;">Play</span>
+            </button>
+          </div>
+        
+          <div class="slider-container">
+            <input
+              type="range"
+              min="0"
+              max="16"
+              step="1"
+              value="0"
+              id="limitations_frame_control"
+              class="frame-slider"
+              oninput="limitations_viewer.change_frame(this.value);"
+            />
+            <div class="slider-ticks">
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span>
+
+            </div>
+            <div class="slider-legend">
+              <div class="legend-item" id="limitations-legend-past"><span class="color-box past"></span>Past Predictions</div>
+              <div class="legend-item" id="limitations-legend-present"><span class="color-box present"></span>Present (within exposure time)</div>
+              <div class="legend-item" id="limitations-legend-future"><span class="color-box future"></span>Future Predictions</div>
+            </div>
+          </div> 
+        </div> <!-- container is-max-desktop -->
+  
+        <!-- Additional Comparison Table -->
+        <!-- <table style="width: 100%; border-collapse: collapse; text-align: center; margin-top: 1em;">
+          <thead>
+            <tr>
+              <th></th>
+              <th style="font-size: 1.5em;  padding: 0.5em;">3D reconstruction</th>
+              <th></th>
+            </tr>
+          </thead> 
+          <tbody>
+            <tr>
+              <th style="font-size: 1.5em;  padding: 0.5em; text-align: center; vertical-align: middle;">MegaSAM on Ours</th>
+              <td style="width: 70%;">
+                <video id="limitations-megasam"  muted autoplay loop 
+                       style="width: 95%; border-radius: 1em;"></video>
+              </td>
+              <td style="width: 30%; vertical-align: middle;">
+                <div style="font-size: 1.5em;  font-weight: bold; margin-bottom: 0.5em;">camera poses</div>
+                <video id="limitations-megasam-poses"  muted autoplay loop
+                style="width: 95%; border-radius: 1em;"></video>
+              </td>
+            </tr>
+          </tbody>
+        </table> -->
+  
+      </div> <!-- hero-body -->
+    </div> <!-- section container -->
+  </section>
+  
+  <br/>
+  
+  </body>
+  </html>

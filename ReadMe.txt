@@ -1,0 +1,1 @@
+Please open "index.html" to see our viewer. It can take some time (30 s - 1 min) to load due to the large amount of videos that need to be load.
