@@ -1,0 +1,405 @@
+/* =========================
+   Base Typography & Links
+   ========================= */
+body {
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.footer .icon-link {
+  font-size: 25px;
+  color: #000;
+}
+
+.link-block a {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.dnerf { font-variant: small-caps; }
+
+/* =========================
+   Teaser / Publication Sections
+   ========================= */
+.teaser { font-family: 'Google Sans', sans-serif; }
+
+.teaser .hero-body {
+  padding-top: 0;
+  padding-bottom: 3rem;
+}
+
+.publication-title,
+.publication-authors { font-family: 'Google Sans', sans-serif; }
+
+.publication-venue {
+  color: #555;
+  width: fit-content;
+  font-weight: bold;
+}
+
+.publication-awards {
+  color: #ff3860;
+  width: fit-content;
+  font-weight: bolder;
+}
+
+.publication-authors a {
+  color: hsl(204, 86%, 53%) !important;
+}
+.publication-authors a:hover { text-decoration: underline; }
+
+.author-block { display: inline-block; }
+
+/* Banner / Video blocks */
+.publication-banner { max-height: parent; }
+
+.publication-banner video {
+  position: relative;
+  left: auto;
+  top: auto;
+  transform: none;
+  object-fit: fit;
+}
+
+.publication-video {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  overflow: hidden;
+  border-radius: 10px !important;
+}
+
+.publication-video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* =========================
+   Results Carousel
+   ========================= */
+.results-carousel { overflow: hidden; }
+
+.results-carousel .item {
+  margin: 5px;
+  overflow: hidden;
+  border: 1px solid #bbb;
+  border-radius: 10px;
+  padding: 0;
+  font-size: 0;
+}
+
+.results-carousel video { margin: 0; }
+
+/* =========================
+   Interpolation Panel
+   ========================= */
+.interpolation-panel {
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+.interpolation-panel .interpolation-image {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.interpolation-panel .slider { margin: 0 !important; }
+
+#interpolation-image-wrapper { width: 100%; }
+#interpolation-image-wrapper img { border-radius: 5px; }
+
+/* =========================
+   Slider (Frame Control)
+   - Thumb spans one interval between ticks
+   ========================= */
+.slider-container {
+  position: relative;
+  width: 100%;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
+/* Tick marks row under the track */
+.slider-ticks {
+  position: absolute;
+  top: 21%;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  transform: translateY(-50%);
+  padding: 0;
+  box-sizing: border-box;
+  z-index: 0;
+}
+.slider-ticks span {
+  width: 1px;
+  height: 10px;
+  background-color: black;
+  transform: translateY(-2px);  /* was: -50% */
+
+}
+
+/* Track */
+.frame-slider {
+  width: 100%;
+  appearance: none;
+  height: 14px;                  /* keep consistent with thumb height */
+  border-radius: 4px;
+  outline: none;
+  background: #e6ffd0;           /* track color; set transparent if you want only the thumb visible */
+  box-sizing: border-box;
+}
+
+/* Optional: past/future background. Keep or remove as desired. */
+.frame-slider.pastfuture {
+  background: #e6ffd0;           /* previously a gradient */
+}
+
+/* Thumb spans exactly one interval (ticks = max + 1) */
+.frame-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 14px;
+  width: calc(100% / var(--intervals, 16));
+  background:#209cee;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 0;
+
+  /* Align edges at start/end since thumb equals an interval width */
+  /* margin-left: calc(-0.5 * (100% / var(--segments, 17))); */
+}
+
+.frame-slider::-moz-range-thumb {
+  height: 14px;
+  width: calc(100% / var(--intervals, 16));
+  background: #209cee;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  /* Firefox alignment (negative margin is unreliable) */
+  /* transform: translateX(calc(-50% / var(--segments, 17))); */
+}
+
+/* Let input’s own background show through on Firefox */
+.frame-slider::-moz-range-track {
+  background: transparent;
+  border: none;
+}
+
+/* Focus visibility for keyboard users */
+.frame-slider:focus {
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.35);
+  border-radius: 6px;
+}
+
+/* =========================
+   Legend under slider
+   ========================= */
+.slider-legend {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 0 8px;
+  font-size: 1em;
+  color: #333;
+  text-align: center;
+}
+
+.legend-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.color-box {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.color-box.past    { background-color: #ffe6d0; }
+.color-box.present { background-color: #e6ffd0; }
+.color-box.future  { background-color: #d0e6ff; }
+
+/* Hide past/future legend items by default; JS shows them in pastfuture mode */
+[id$='-legend-past'],
+[id$='-legend-future'] {
+  display: none;
+}
+
+/* =========================
+   Video Glow Effects
+   ========================= */
+.video-glow-past {
+  /* slightly richer peach to match slider past */
+  box-shadow:
+    0 0 20px rgba(255, 205, 170, 0.90),
+    0 0 32px rgba(255, 205, 170, 0.60),
+    0 0 48px rgba(255, 205, 170, 0.35);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.video-glow-present {
+  /* slightly richer green to match slider present */
+  box-shadow:
+    0 0 20px rgba(200, 255, 160, 0.90),
+    0 0 32px rgba(200, 255, 160, 0.60),
+    0 0 48px rgba(200, 255, 160, 0.35);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.video-glow-future {
+  /* slightly richer blue to match slider future */
+  box-shadow:
+    0 0 20px rgba(170, 205, 255, 0.90),
+    0 0 32px rgba(170, 205, 255, 0.60),
+    0 0 48px rgba(170, 205, 255, 0.35);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+
+
+/* Utility */
+.no-glow {
+  box-shadow: none !important;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+
+/* Interval-aware colors for past/present/future */
+.frame-slider {
+  --past-color:  #ffe6d0;
+  --present-color: #e6ffd0;
+  --future-color:  #d0e6ff;
+
+  /* Defaults; JS will set these exactly */
+  --intervals: 16;    /* number of intervals */
+  --past-count: 4;    /* 0..4 */
+  --present-count: 8; /* 5..12 */
+  --future-count: 4;  /* 12..15 */
+
+  /* Computed stops */
+  --stop1: calc(100% * var(--past-count) / var(--intervals));
+  --stop2: calc(100% * (var(--past-count) + var(--present-count)) / var(--intervals));
+}
+
+/* Show the three-zone track in pastfuture mode */
+.frame-slider.pastfuture {
+  background:
+    linear-gradient(to right,
+      var(--past-color)    0%,
+      var(--past-color)    var(--stop1),
+      var(--present-color) var(--stop1),
+      var(--present-color) var(--stop2),
+      var(--future-color)  var(--stop2),
+      var(--future-color)  100%
+    );
+}
+
+/* Let the input background show on Firefox */
+.frame-slider::-moz-range-track { background: transparent; border: none; }
+
+
+/* =========================
+   Deadtime mode (alternating segments)
+   ========================= */
+
+/* Define colors for live (on) and dead (off) intervals */
+.deadtime-mode {
+  --on:  #e6ffd0;  /* green */
+  --off: #f0f0f0;  /* grey */
+}
+
+/* Whole slider track background in deadtime mode */
+.deadtime-mode .frame-slider {
+  background:
+    repeating-linear-gradient(
+      to right,
+      var(--on)  0 calc(100% / var(--intervals)),
+      var(--off) calc(100% / var(--intervals)) calc(200% / var(--intervals))
+    ) !important;
+}
+
+/* WebKit/Blink specific track */
+.deadtime-mode .frame-slider::-webkit-slider-runnable-track {
+  background:
+    repeating-linear-gradient(
+      to right,
+      var(--on)  0 calc(100% / var(--intervals)),
+      var(--off) calc(100% / var(--intervals)) calc(200% / var(--intervals))
+    ) !important;
+}
+
+/* grey for deadtime */
+.color-box.deadtime { background-color: #dddddd; } /* pick your grey */
+
+/* hide deadtime legend by default; JS will show it in 1deadtime mode */
+/* [id$='-legend-deadtime'] { display: none; } */
+
+
+/* =========================
+   Present mode: 32 intervals, center 16 green
+   ========================= */
+
+/* Colors for present mode segments */
+.present32 {
+  --present-on:  #e6ffd0; /* green-ish present zone */
+  --present-off: #f0f0f0; /* light grey edges */
+}
+
+/* Firefox/general: paint background on the input */
+.present32 .frame-slider {
+  background: linear-gradient(
+    to right,
+    var(--present-off) 0,
+    var(--present-off) calc(100% * 8 / 32),
+    var(--present-on)  calc(100% * 8 / 32),
+    var(--present-on)  calc(100% * 24 / 32),
+    var(--present-off) calc(100% * 24 / 32),
+    var(--present-off) 100%
+  ) !important;
+}
+
+/* WebKit/Blink track */
+.present32 .frame-slider::-webkit-slider-runnable-track {
+  background: linear-gradient(
+    to right,
+    var(--present-off) 0,
+    var(--present-off) calc(100% * 8 / 32),
+    var(--present-on)  calc(100% * 8 / 32),
+    var(--present-on)  calc(100% * 24 / 32),
+    var(--present-off) calc(100% * 24 / 32),
+    var(--present-off) 100%
+  ) !important;
+}
+
+/* Show past/future in PRESENT mode and make them grey */
+.present32 [id$='-legend-past'],
+.present32 [id$='-legend-future'] {
+	display: inline-flex; /* override the default 'display:none' */
+}
+/* Show past/future legend in pastfuture mode too */
+.pastfuture-active [id$='-legend-past'],
+.pastfuture-active [id$='-legend-future'] {
+  display: inline-flex;
+}
+
+
+.present32 .color-box.past,
+.present32 .color-box.future {
+	background-color: #dddddd;
+}
+
+.pub-buttons .button {
+  font-size: 0.95rem;   /* adjust as needed */
+}
